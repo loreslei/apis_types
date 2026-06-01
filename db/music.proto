@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package music;
+
+service MusicService {
+  rpc GetUsers (Empty) returns (UserList) {}
+  rpc GetSongs (Empty) returns (SongList) {}
+  rpc GetUserPlaylists (IdRequest) returns (PlaylistList) {}
+  rpc GetPlaylistSongs (IdRequest) returns (SongList) {}
+  rpc GetSongPlaylists (IdRequest) returns (PlaylistList) {}
+}
+
+message Empty {}
+
+message IdRequest {
+  int32 id = 1;
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+  int32 age = 3;
+}
+
+message Song {
+  int32 id = 1;
+  string name = 2;
+  string artist = 3;
+}
+
+message Playlist {
+  int32 id = 1;
+  string name = 2;
+  int32 user_id = 3;
+}
+
+message UserList {
+  repeated User users = 1;
+}
+
+message SongList {
+  repeated Song songs = 1;
+}
+
+message PlaylistList {
+  repeated Playlist playlists = 1;
+}

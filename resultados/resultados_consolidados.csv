@@ -1,0 +1,17 @@
+API,Nível,Latência_95%
+SOAP (Python),Leve,2100
+REST (Node),Leve,11
+REST (Python),Leve,35
+GraphQL (Node),Leve,19
+GraphQL (Python),Leve,170
+gRPC (Node),Leve,5
+gRPC (Python),Leve,6
+SOAP (Node),Leve,18
+SOAP (Python),Médio,6300
+REST (Node),Médio,13
+REST (Python),Médio,2100
+GraphQL (Node),Médio,180
+GraphQL (Python),Médio,1400
+gRPC (Node),Médio,2
+gRPC (Python),Médio,2
+SOAP (Node),Médio,120

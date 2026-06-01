@@ -1,0 +1,6 @@
+locust
+grpcio
+grpcio-tools
+zeep
+pandas
+matplotlib
