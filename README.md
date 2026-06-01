@@ -58,3 +58,4 @@ A partir da coleta de dados em `resultados/*/stats.csv`, observou-se as seguinte
 
 
 ## Gráfico Comparativo de Desempenho
+<img width="1400" height="700" alt="Image" src="https://github.com/user-attachments/assets/e6c4f1d6-3b26-4c4d-be27-bd06204f9b45" />
