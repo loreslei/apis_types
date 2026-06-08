@@ -35,26 +35,27 @@ As operações testadas (que variam sua forma de chamada de acordo com o protoco
 
 
 ### Níveis de Carga Aplicados
-O script automatizado (`benchmark.py`) executa o Locust em dois cenários duranto **3 minutos** cada:
+O script executa o Locust em dois cenários durando **3 minutos** cada:
 - **Cenário Leve:** 50 usuários simultâneos (taxa de entrada de 10 novos usuários por segundo). 
 - **Cenário Médio:** 200 usuários simultâneos (taxa de entrada de 50 novos usuários por segundo). 
 
 ### A Métrica (Latência no Percentil 95%)
-O principal indicador de performance adotado foi a **Latência de 95% (p95)**. Ela nos informa o tempo máximo de resposta que 95% das requisições levaram para ser concluídas. Isso é muito mais confiável que a "média", pois elimina picos anômalos e reflete a experiência real da grande maioria dos usuários do serviço.
+O principal indicador de performance adotado foi a **Latência de 95% (p95)** por informar o tempo máximo de resposta que 95% das requisições levaram para ser concluídas. 
 
 ---
 
 ## Conclusões Gerais (Baseado nos Resultados)
 
-A partir da coleta de dados em `resultados/*/stats.csv`, observou-se as seguintes tendências na arquitetura de microsserviços:
+A partir da coleta de dados, observou-se as seguintes tendências:
 
 1. **A Supremacia do gRPC:** O gRPC foi, de forma absoluta, o protocolo mais rápido e eficiente testado (atingindo latências incríveis na casa dos **2ms a 6ms** no percentil 95%, tanto em Node.js quanto em Python). O uso do HTTP/2 combinado com buffers binários (Protobuf) se mostrou infinitamente superior no tráfego de listas massivas de dados comparado a arquivos de texto (JSON/XML).
 
 2. **O Peso do GraphQL:** Como esperado, o GraphQL apresentou latências consistentemente maiores que REST e gRPC em todos os cenários. A flexibilidade de montar queries sob demanda tem um custo computacional significativo (validação do schema, resolução da árvore no lado do servidor), elevando os tempos de resposta.
 
-3. **Node.js brilha em REST, mas engasga no SOAP:** O Node.js se provou excepcional para I/O básico em JSON (Node REST atingiu sólidos ~13ms mesmo no nível Médio). No entanto, sua arquitetura single-thread penou com o SOAP: a geração e transformação de enormes e complexas strings XML em puro JavaScript bloqueou a event loop, degradando a performance frente à concorrência.
+3. **Node.js brilha em REST, mas engasga no SOAP:** O Node.js se provou excepcional para I/O básico em JSON (Node REST atingiu sólidos ~13ms mesmo no nível Médio). No entanto, sua arquitetura single-thread não se saiu bem com o SOAP: a geração e transformação de enormes e complexas strings XML em puro JavaScript bloqueou a event loop, degradando a performance frente à concorrência.
 
 4. **Desempenho do Python:** A performance do Python variou dependendo do servidor utilizado. Quando alavancado com `FastAPI`, servidores C-binding (`uvicorn`) e bibliotecas como `lxml` (escritas em C), o Python não só atingiu métricas competitivas no REST, mas demonstrou superioridade ao Node.js em cenários de uso intenso de CPU (como na criação concorrente de pacotes massivos XML no protocolo SOAP).
 
 
-## Gráfico Comparativo de Desempenho
+## Gráfico Final Comparativo de Desempenho
+<img width="1400" height="700" alt="Image" src="https://github.com/user-attachments/assets/e6c4f1d6-3b26-4c4d-be27-bd06204f9b45" />
