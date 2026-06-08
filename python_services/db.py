@@ -45,3 +45,50 @@ def get_song_playlists(song_id):
         WHERE ps.song_id = ?
     ''', (song_id,))
     return [dict(row) for row in c.fetchall()]
+
+def run_query(sql, params=()):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute(sql, params)
+    conn.commit()
+    result = {'lastrowid': c.lastrowid, 'rowcount': c.rowcount}
+    conn.close()
+    return result
+
+# CRUD for Users
+def create_user(name, age):
+    return run_query('INSERT INTO users (name, age) VALUES (?, ?)', (name, age))
+
+def update_user(id, name, age):
+    return run_query('UPDATE users SET name = ?, age = ? WHERE id = ?', (name, age, id))
+
+def delete_user(id):
+    return run_query('DELETE FROM users WHERE id = ?', (id,))
+
+# CRUD for Songs
+def create_song(name, artist):
+    return run_query('INSERT INTO songs (name, artist) VALUES (?, ?)', (name, artist))
+
+def update_song(id, name, artist):
+    return run_query('UPDATE songs SET name = ?, artist = ? WHERE id = ?', (name, artist, id))
+
+def delete_song(id):
+    return run_query('DELETE FROM songs WHERE id = ?', (id,))
+
+# CRUD for Playlists
+def create_playlist(name, user_id):
+    return run_query('INSERT INTO playlists (name, user_id) VALUES (?, ?)', (name, user_id))
+
+def update_playlist(id, name):
+    return run_query('UPDATE playlists SET name = ? WHERE id = ?', (name, id))
+
+def delete_playlist(id):
+    return run_query('DELETE FROM playlists WHERE id = ?', (id,))
+
+# CRUD for Playlist Songs
+def add_song_to_playlist(playlist_id, song_id):
+    return run_query('INSERT INTO playlist_songs (playlist_id, song_id) VALUES (?, ?)', (playlist_id, song_id))
+
+def remove_song_from_playlist(playlist_id, song_id):
+    return run_query('DELETE FROM playlist_songs WHERE playlist_id = ? AND song_id = ?', (playlist_id, song_id))
+

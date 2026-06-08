@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import db
 
-from spyne import Application, rpc, ServiceBase, Iterable, Integer, Unicode, ComplexModel, Array
+from spyne import Application, rpc, ServiceBase, Iterable, Integer, Unicode, ComplexModel, Array, Boolean
 from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
 
@@ -49,6 +49,80 @@ class MusicService(ServiceBase):
     def GetSongPlaylists(ctx, id):
         playlists = db.get_song_playlists(id)
         return [Playlist(id=p['id'], name=p['name'], userId=p['user_id']) for p in playlists]
+
+class MutationResponse(ComplexModel):
+    success = Boolean
+    message = Unicode
+    id = Integer
+
+def add_crud_methods_to_service(cls):
+    @rpc(Unicode, Integer, _returns=MutationResponse)
+    def CreateUser(ctx, name, age):
+        res = db.create_user(name, age)
+        return MutationResponse(success=True, message="Created", id=res['lastrowid'])
+    cls.CreateUser = classmethod(CreateUser)
+
+    @rpc(Integer, Unicode, Integer, _returns=MutationResponse)
+    def UpdateUser(ctx, id, name, age):
+        db.update_user(id, name, age)
+        return MutationResponse(success=True, message="Updated")
+    cls.UpdateUser = classmethod(UpdateUser)
+
+    @rpc(Integer, _returns=MutationResponse)
+    def DeleteUser(ctx, id):
+        db.delete_user(id)
+        return MutationResponse(success=True, message="Deleted")
+    cls.DeleteUser = classmethod(DeleteUser)
+
+    @rpc(Unicode, Unicode, _returns=MutationResponse)
+    def CreateSong(ctx, name, artist):
+        res = db.create_song(name, artist)
+        return MutationResponse(success=True, message="Created", id=res['lastrowid'])
+    cls.CreateSong = classmethod(CreateSong)
+
+    @rpc(Integer, Unicode, Unicode, _returns=MutationResponse)
+    def UpdateSong(ctx, id, name, artist):
+        db.update_song(id, name, artist)
+        return MutationResponse(success=True, message="Updated")
+    cls.UpdateSong = classmethod(UpdateSong)
+
+    @rpc(Integer, _returns=MutationResponse)
+    def DeleteSong(ctx, id):
+        db.delete_song(id)
+        return MutationResponse(success=True, message="Deleted")
+    cls.DeleteSong = classmethod(DeleteSong)
+
+    @rpc(Unicode, Integer, _returns=MutationResponse)
+    def CreatePlaylist(ctx, name, userId):
+        res = db.create_playlist(name, userId)
+        return MutationResponse(success=True, message="Created", id=res['lastrowid'])
+    cls.CreatePlaylist = classmethod(CreatePlaylist)
+
+    @rpc(Integer, Unicode, _returns=MutationResponse)
+    def UpdatePlaylist(ctx, id, name):
+        db.update_playlist(id, name)
+        return MutationResponse(success=True, message="Updated")
+    cls.UpdatePlaylist = classmethod(UpdatePlaylist)
+
+    @rpc(Integer, _returns=MutationResponse)
+    def DeletePlaylist(ctx, id):
+        db.delete_playlist(id)
+        return MutationResponse(success=True, message="Deleted")
+    cls.DeletePlaylist = classmethod(DeletePlaylist)
+
+    @rpc(Integer, Integer, _returns=MutationResponse)
+    def AddSongToPlaylist(ctx, playlistId, songId):
+        db.add_song_to_playlist(playlistId, songId)
+        return MutationResponse(success=True, message="Added")
+    cls.AddSongToPlaylist = classmethod(AddSongToPlaylist)
+
+    @rpc(Integer, Integer, _returns=MutationResponse)
+    def RemoveSongFromPlaylist(ctx, playlistId, songId):
+        db.remove_song_from_playlist(playlistId, songId)
+        return MutationResponse(success=True, message="Removed")
+    cls.RemoveSongFromPlaylist = classmethod(RemoveSongFromPlaylist)
+
+add_crud_methods_to_service(MusicService)
 
 application = Application([MusicService], 'http://example.com/music',
                           in_protocol=Soap11(validator='lxml'),

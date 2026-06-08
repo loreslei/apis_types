@@ -100,28 +100,39 @@ def run_benchmark():
         for p in processes:
             p.terminate()
 
-    print("\nGerando gráfico de barras comparativo...")
+    print("\nGerando gráficos comparativos (um para cada tipo de API)...")
     df_res = pd.DataFrame(results)
     if not df_res.empty:
-        pivot_df = df_res.pivot(index='Nível', columns='API', values='Latência_95%')
-        pivot_df = pivot_df.reindex(['Leve', 'Médio'])
+        # Extrair o tipo de API (ex: 'REST' de 'REST (Node)')
+        df_res['API_Type'] = df_res['API'].apply(lambda x: x.split(' ')[0])
+        df_res['Lang'] = df_res['API'].apply(lambda x: x.split(' ')[1].replace('(', '').replace(')', ''))
         
-        ax = pivot_df.plot(kind='bar', figsize=(14, 7), width=0.85, colormap='Paired')
-        plt.title('Comparativo de Desempenho (Latência no Percentil 95%)', fontsize=16)
-        plt.xlabel('Carga do Teste', fontsize=14)
-        plt.ylabel('Latência 95% (ms)', fontsize=14)
-        plt.xticks(rotation=0, fontsize=12)
-        plt.legend(title='Tipos de API', bbox_to_anchor=(1.02, 1), loc='upper left', fontsize=11)
-        plt.grid(axis='y', linestyle='--', alpha=0.7)
-        plt.tight_layout()
+        api_types = df_res['API_Type'].unique()
         
-        chart_path = os.path.join(RESULTS_DIR, 'grafico_comparativo.png')
-        plt.savefig(chart_path)
+        for api_type in api_types:
+            df_subset = df_res[df_res['API_Type'] == api_type]
+            pivot_df = df_subset.pivot(index='Nível', columns='Lang', values='Latência_95%')
+            pivot_df = pivot_df.reindex(['Leve', 'Médio'])
+            
+            # Criando um gráfico maior e mais legível para cada API
+            ax = pivot_df.plot(kind='bar', figsize=(10, 6), width=0.6, colormap='Set1')
+            plt.title(f'Comparativo de Desempenho: {api_type} (Node vs Python)', fontsize=16)
+            plt.xlabel('Carga do Teste', fontsize=14)
+            plt.ylabel('Latência 95% (ms)', fontsize=14)
+            plt.xticks(rotation=0, fontsize=12)
+            plt.legend(title='Linguagem', fontsize=12)
+            plt.grid(axis='y', linestyle='--', alpha=0.7)
+            plt.tight_layout()
+            
+            chart_path = os.path.join(RESULTS_DIR, f'grafico_{api_type}.png')
+            plt.savefig(chart_path)
+            plt.close()
+            print(f"Gráfico gerado: {chart_path}")
+            
         df_res.to_csv(os.path.join(RESULTS_DIR, 'resultados_consolidados.csv'), index=False)
-        print(f"\nSucesso! O gráfico foi salvo em: {chart_path}")
-        print("Os resultados crus também foram salvos no diretório /resultados.")
+        print("\nSucesso! Os resultados crus também foram salvos no diretório /resultados.")
     else:
-        print("Nenhum dado gerado para criar o gráfico.")
+        print("Nenhum dado gerado para criar os gráficos.")
 
 if __name__ == '__main__':
     run_benchmark()

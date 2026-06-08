@@ -14,6 +14,16 @@ const queryAll = (sql, params = []) => {
   });
 };
 
+// Helper function to run insert/update/delete operations
+const runQuery = (sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function(err) {
+      if (err) reject(err);
+      else resolve({ lastID: this.lastID, changes: this.changes });
+    });
+  });
+};
+
 module.exports = {
   db,
   
@@ -37,5 +47,24 @@ module.exports = {
       JOIN playlist_songs ps ON p.id = ps.playlist_id
       WHERE ps.song_id = ?
     `, [songId]);
-  }
+  },
+
+  // CRUD for Users
+  createUser: (name, age) => runQuery('INSERT INTO users (name, age) VALUES (?, ?)', [name, age]),
+  updateUser: (id, name, age) => runQuery('UPDATE users SET name = ?, age = ? WHERE id = ?', [name, age, id]),
+  deleteUser: (id) => runQuery('DELETE FROM users WHERE id = ?', [id]),
+
+  // CRUD for Songs
+  createSong: (name, artist) => runQuery('INSERT INTO songs (name, artist) VALUES (?, ?)', [name, artist]),
+  updateSong: (id, name, artist) => runQuery('UPDATE songs SET name = ?, artist = ? WHERE id = ?', [name, artist, id]),
+  deleteSong: (id) => runQuery('DELETE FROM songs WHERE id = ?', [id]),
+
+  // CRUD for Playlists
+  createPlaylist: (name, userId) => runQuery('INSERT INTO playlists (name, user_id) VALUES (?, ?)', [name, userId]),
+  updatePlaylist: (id, name) => runQuery('UPDATE playlists SET name = ? WHERE id = ?', [name, id]),
+  deletePlaylist: (id) => runQuery('DELETE FROM playlists WHERE id = ?', [id]),
+
+  // CRUD for Playlist Songs
+  addSongToPlaylist: (playlistId, songId) => runQuery('INSERT INTO playlist_songs (playlist_id, song_id) VALUES (?, ?)', [playlistId, songId]),
+  removeSongFromPlaylist: (playlistId, songId) => runQuery('DELETE FROM playlist_songs WHERE playlist_id = ? AND song_id = ?', [playlistId, songId])
 };

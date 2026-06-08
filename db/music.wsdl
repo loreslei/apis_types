@@ -103,8 +103,103 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-        </xsd:schema>
+        
+            <xsd:complexType name="MutationResponse">
+                <xsd:sequence>
+                    <xsd:element name="success" type="xsd:boolean"/>
+                    <xsd:element name="message" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <!-- User CRUD -->
+            <xsd:element name="CreateUserRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="age" type="xsd:int"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+            <xsd:element name="UpdateUserRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="id" type="xsd:int"/>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="age" type="xsd:int"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+            <xsd:element name="DeleteUserRequest">
+                <xsd:complexType><xsd:sequence><xsd:element name="id" type="xsd:int"/></xsd:sequence></xsd:complexType>
+            </xsd:element>
+
+            <!-- Song CRUD -->
+            <xsd:element name="CreateSongRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="artist" type="xsd:string"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+            <xsd:element name="UpdateSongRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="id" type="xsd:int"/>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="artist" type="xsd:string"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+            <xsd:element name="DeleteSongRequest">
+                <xsd:complexType><xsd:sequence><xsd:element name="id" type="xsd:int"/></xsd:sequence></xsd:complexType>
+            </xsd:element>
+
+            <!-- Playlist CRUD -->
+            <xsd:element name="CreatePlaylistRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="userId" type="xsd:int"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+            <xsd:element name="UpdatePlaylistRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="id" type="xsd:int"/>
+                    <xsd:element name="name" type="xsd:string"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+            <xsd:element name="DeletePlaylistRequest">
+                <xsd:complexType><xsd:sequence><xsd:element name="id" type="xsd:int"/></xsd:sequence></xsd:complexType>
+            </xsd:element>
+
+            <!-- PlaylistSong CRUD -->
+            <xsd:element name="AddSongToPlaylistRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="playlistId" type="xsd:int"/>
+                    <xsd:element name="songId" type="xsd:int"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+            <xsd:element name="RemoveSongFromPlaylistRequest">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="playlistId" type="xsd:int"/>
+                    <xsd:element name="songId" type="xsd:int"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="MutationResponseElement">
+                <xsd:complexType><xsd:sequence>
+                    <xsd:element name="success" type="xsd:boolean"/>
+                    <xsd:element name="message" type="xsd:string"/>
+                </xsd:sequence></xsd:complexType>
+            </xsd:element>
+</xsd:schema>
     </types>
+
+    <message name="MutationResponseMsg"><part name="parameters" element="tns:MutationResponseElement"/></message>
+    <message name="CreateUserRequestMsg"><part name="parameters" element="tns:CreateUserRequest"/></message>
+    <message name="UpdateUserRequestMsg"><part name="parameters" element="tns:UpdateUserRequest"/></message>
+    <message name="DeleteUserRequestMsg"><part name="parameters" element="tns:DeleteUserRequest"/></message>
+    <message name="CreateSongRequestMsg"><part name="parameters" element="tns:CreateSongRequest"/></message>
+    <message name="UpdateSongRequestMsg"><part name="parameters" element="tns:UpdateSongRequest"/></message>
+    <message name="DeleteSongRequestMsg"><part name="parameters" element="tns:DeleteSongRequest"/></message>
+    <message name="CreatePlaylistRequestMsg"><part name="parameters" element="tns:CreatePlaylistRequest"/></message>
+    <message name="UpdatePlaylistRequestMsg"><part name="parameters" element="tns:UpdatePlaylistRequest"/></message>
+    <message name="DeletePlaylistRequestMsg"><part name="parameters" element="tns:DeletePlaylistRequest"/></message>
+    <message name="AddSongToPlaylistRequestMsg"><part name="parameters" element="tns:AddSongToPlaylistRequest"/></message>
+    <message name="RemoveSongFromPlaylistRequestMsg"><part name="parameters" element="tns:RemoveSongFromPlaylistRequest"/></message>
+
 
     <message name="GetUsersRequestMsg"><part name="parameters" element="tns:GetUsersRequest"/></message>
     <message name="GetUsersResponseMsg"><part name="parameters" element="tns:GetUsersResponse"/></message>
@@ -139,7 +234,51 @@
             <input message="tns:IdRequestMsg"/>
             <output message="tns:GetSongPlaylistsResponseMsg"/>
         </operation>
-    </portType>
+            <operation name="CreateUser">
+            <input message="tns:CreateUserRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="UpdateUser">
+            <input message="tns:UpdateUserRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="DeleteUser">
+            <input message="tns:DeleteUserRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="CreateSong">
+            <input message="tns:CreateSongRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="UpdateSong">
+            <input message="tns:UpdateSongRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="DeleteSong">
+            <input message="tns:DeleteSongRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="CreatePlaylist">
+            <input message="tns:CreatePlaylistRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="UpdatePlaylist">
+            <input message="tns:UpdatePlaylistRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="DeletePlaylist">
+            <input message="tns:DeletePlaylistRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="AddSongToPlaylist">
+            <input message="tns:AddSongToPlaylistRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+        <operation name="RemoveSongFromPlaylist">
+            <input message="tns:RemoveSongFromPlaylistRequestMsg"/>
+            <output message="tns:MutationResponseMsg"/>
+        </operation>
+</portType>
 
     <binding name="MusicBinding" type="tns:MusicPortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -169,7 +308,62 @@
             <input><soap:body use="literal"/></input>
             <output><soap:body use="literal"/></output>
         </operation>
-    </binding>
+            <operation name="CreateUser">
+            <soap:operation soapAction="http://example.com/music/CreateUser"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="UpdateUser">
+            <soap:operation soapAction="http://example.com/music/UpdateUser"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="DeleteUser">
+            <soap:operation soapAction="http://example.com/music/DeleteUser"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="CreateSong">
+            <soap:operation soapAction="http://example.com/music/CreateSong"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="UpdateSong">
+            <soap:operation soapAction="http://example.com/music/UpdateSong"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="DeleteSong">
+            <soap:operation soapAction="http://example.com/music/DeleteSong"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="CreatePlaylist">
+            <soap:operation soapAction="http://example.com/music/CreatePlaylist"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="UpdatePlaylist">
+            <soap:operation soapAction="http://example.com/music/UpdatePlaylist"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="DeletePlaylist">
+            <soap:operation soapAction="http://example.com/music/DeletePlaylist"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="AddSongToPlaylist">
+            <soap:operation soapAction="http://example.com/music/AddSongToPlaylist"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="RemoveSongFromPlaylist">
+            <soap:operation soapAction="http://example.com/music/RemoveSongFromPlaylist"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+</binding>
 
     <service name="MusicService">
         <port name="MusicPort" binding="tns:MusicBinding">

@@ -8,6 +8,21 @@ service MusicService {
   rpc GetUserPlaylists (IdRequest) returns (PlaylistList) {}
   rpc GetPlaylistSongs (IdRequest) returns (SongList) {}
   rpc GetSongPlaylists (IdRequest) returns (PlaylistList) {}
+
+  rpc CreateUser (UserRequest) returns (MutationResponse) {}
+  rpc UpdateUser (User) returns (MutationResponse) {}
+  rpc DeleteUser (IdRequest) returns (MutationResponse) {}
+
+  rpc CreateSong (SongRequest) returns (MutationResponse) {}
+  rpc UpdateSong (Song) returns (MutationResponse) {}
+  rpc DeleteSong (IdRequest) returns (MutationResponse) {}
+
+  rpc CreatePlaylist (PlaylistRequest) returns (MutationResponse) {}
+  rpc UpdatePlaylist (Playlist) returns (MutationResponse) {}
+  rpc DeletePlaylist (IdRequest) returns (MutationResponse) {}
+
+  rpc AddSongToPlaylist (PlaylistSongRequest) returns (MutationResponse) {}
+  rpc RemoveSongFromPlaylist (PlaylistSongRequest) returns (MutationResponse) {}
 }
 
 message Empty {}
@@ -44,4 +59,29 @@ message SongList {
 
 message PlaylistList {
   repeated Playlist playlists = 1;
+}
+
+message UserRequest {
+  string name = 1;
+  int32 age = 2;
+}
+
+message SongRequest {
+  string name = 1;
+  string artist = 2;
+}
+
+message PlaylistRequest {
+  string name = 1;
+  int32 user_id = 2;
+}
+
+message PlaylistSongRequest {
+  int32 playlist_id = 1;
+  int32 song_id = 2;
+}
+
+message MutationResponse {
+  bool success = 1;
+  string message = 2;
 }

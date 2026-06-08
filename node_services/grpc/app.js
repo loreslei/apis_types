@@ -57,6 +57,76 @@ server.addService(musicProto.MusicService.service, {
     } catch (error) {
       callback(error, null);
     }
+  },
+
+  CreateUser: async (call, callback) => {
+    try {
+      await db.createUser(call.request.name, call.request.age);
+      callback(null, { success: true, message: "Created" });
+    } catch (error) { callback(error, null); }
+  },
+  UpdateUser: async (call, callback) => {
+    try {
+      await db.updateUser(call.request.id, call.request.name, call.request.age);
+      callback(null, { success: true, message: "Updated" });
+    } catch (error) { callback(error, null); }
+  },
+  DeleteUser: async (call, callback) => {
+    try {
+      await db.deleteUser(call.request.id);
+      callback(null, { success: true, message: "Deleted" });
+    } catch (error) { callback(error, null); }
+  },
+
+  CreateSong: async (call, callback) => {
+    try {
+      await db.createSong(call.request.name, call.request.artist);
+      callback(null, { success: true, message: "Created" });
+    } catch (error) { callback(error, null); }
+  },
+  UpdateSong: async (call, callback) => {
+    try {
+      await db.updateSong(call.request.id, call.request.name, call.request.artist);
+      callback(null, { success: true, message: "Updated" });
+    } catch (error) { callback(error, null); }
+  },
+  DeleteSong: async (call, callback) => {
+    try {
+      await db.deleteSong(call.request.id);
+      callback(null, { success: true, message: "Deleted" });
+    } catch (error) { callback(error, null); }
+  },
+
+  CreatePlaylist: async (call, callback) => {
+    try {
+      await db.createPlaylist(call.request.name, call.request.user_id);
+      callback(null, { success: true, message: "Created" });
+    } catch (error) { callback(error, null); }
+  },
+  UpdatePlaylist: async (call, callback) => {
+    try {
+      await db.updatePlaylist(call.request.id, call.request.name);
+      callback(null, { success: true, message: "Updated" });
+    } catch (error) { callback(error, null); }
+  },
+  DeletePlaylist: async (call, callback) => {
+    try {
+      await db.deletePlaylist(call.request.id);
+      callback(null, { success: true, message: "Deleted" });
+    } catch (error) { callback(error, null); }
+  },
+
+  AddSongToPlaylist: async (call, callback) => {
+    try {
+      await db.addSongToPlaylist(call.request.playlist_id, call.request.song_id);
+      callback(null, { success: true, message: "Added" });
+    } catch (error) { callback(error, null); }
+  },
+  RemoveSongFromPlaylist: async (call, callback) => {
+    try {
+      await db.removeSongFromPlaylist(call.request.playlist_id, call.request.song_id);
+      callback(null, { success: true, message: "Removed" });
+    } catch (error) { callback(error, null); }
   }
 });
 

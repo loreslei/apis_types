@@ -1,0 +1,22 @@
+gets
+
+
+python 
+
+curl.exe -X POST http://127.0.0.1:8004/ -H "Content-Type: text/xml" -d "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://example.com/music\"><soap:Body><tns:GetUsers></tns:GetUsers></soap:Body></soap:Envelope>"
+
+
+node
+
+curl.exe -X POST http://127.0.0.1:3004/music -H "Content-Type: text/xml" -d "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://example.com/music\"><soap:Body><tns:GetUsersRequest></tns:GetUsersRequest></soap:Body></soap:Envelope>"
+
+
+
+GraphQL
+
+Node
+curl.exe -X POST http://127.0.0.1:3002/ -H "Content-Type: application/json" -d "{\"query\": \"query { getUsers { id name } }\"}"
+
+
+Python
+curl.exe -X POST http://127.0.0.1:8002/graphql -H "Content-Type: application/json" -d "{\"query\": \"query { getUsers { id name } }\"}"
