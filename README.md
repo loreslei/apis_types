@@ -73,7 +73,7 @@ Aqui o cenário muda completamente! O gRPC, operando sobre HTTP/2 e trafegando b
 
 ---
 
-## Conclusões Gerais (Baseado nos Novos Resultados)
+## Conclusões Gerais
 
 A partir da coleta de dados detalhada e separada por protocolo, observou-se as seguintes tendências definitivas:
 
