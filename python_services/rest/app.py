@@ -42,6 +42,9 @@ class PlaylistCreate(BaseModel):
     name: str
     userId: int
 
+class PlaylistUpdate(BaseModel):
+    name: str
+
 class PlaylistSongAdd(BaseModel):
     songId: int
 
@@ -84,7 +87,7 @@ def create_playlist(playlist: PlaylistCreate):
     return {"success": True, "id": res['lastrowid']}
 
 @app.put("/playlists/{playlist_id}")
-def update_playlist(playlist_id: int, playlist: PlaylistCreate):
+def update_playlist(playlist_id: int, playlist: PlaylistUpdate):
     db.update_playlist(playlist_id, playlist.name)
     return {"success": True}
 
