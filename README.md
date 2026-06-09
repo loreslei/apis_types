@@ -44,18 +44,40 @@ O principal indicador de performance adotado foi a **Latência de 95% (p95)** po
 
 ---
 
-## Conclusões Gerais (Baseado nos Resultados)
+## Gráficos Comparativos de Desempenho
 
-A partir da coleta de dados, observou-se as seguintes tendências:
+Abaixo estão os resultados detalhados de cada protocolo sob as cargas Leve e Média:
 
-1. **A Supremacia do gRPC:** O gRPC foi, de forma absoluta, o protocolo mais rápido e eficiente testado (atingindo latências incríveis na casa dos **2ms a 6ms** no percentil 95%, tanto em Node.js quanto em Python). O uso do HTTP/2 combinado com buffers binários (Protobuf) se mostrou infinitamente superior no tráfego de listas massivas de dados comparado a arquivos de texto (JSON/XML).
+### 1. REST (Node vs Python)
+<img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/4ad28758-3686-4164-854d-529b1d3ca437" />
 
-2. **O Peso do GraphQL:** Como esperado, o GraphQL apresentou latências consistentemente maiores que REST e gRPC em todos os cenários. A flexibilidade de montar queries sob demanda tem um custo computacional significativo (validação do schema, resolução da árvore no lado do servidor), elevando os tempos de resposta.
+No protocolo REST, o Node.js demonstra uma estabilidade impressionante, mantendo a latência próxima de zero mesmo sob carga Média. O Python, por outro lado, sofre uma degradação severa no cenário Médio, com a latência saltando para mais de 2000ms. Isso evidencia a alta eficiência do V8 (engine do Node) na serialização e deserialização nativa de JSON sob concorrência.
 
-3. **Node.js brilha em REST, mas engasga no SOAP:** O Node.js se provou excepcional para I/O básico em JSON (Node REST atingiu sólidos ~13ms mesmo no nível Médio). No entanto, sua arquitetura single-thread não se saiu bem com o SOAP: a geração e transformação de enormes e complexas strings XML em puro JavaScript bloqueou a event loop, degradando a performance frente à concorrência.
+### 2. GraphQL (Node vs Python)
+<img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/12259458-09bb-4e60-8bd2-3d6f917a4b6f" />
 
-4. **Desempenho do Python:** A performance do Python variou dependendo do servidor utilizado. Quando alavancado com `FastAPI`, servidores C-binding (`uvicorn`) e bibliotecas como `lxml` (escritas em C), o Python não só atingiu métricas competitivas no REST, mas demonstrou superioridade ao Node.js em cenários de uso intenso de CPU (como na criação concorrente de pacotes massivos XML no protocolo SOAP).
+O GraphQL exige mais processamento devido à resolução da árvore de consultas (resolvers) e validação de schemas. Aqui, o Node.js tem um leve aumento de latência no cenário Médio (ficando abaixo de 200ms), mas o Python sofre um grande gargalo, alcançando 1400ms. A resolução assíncrona do Node.js lida muito melhor com a complexidade do GraphQL do que a implementação em Python.
 
+### 3. SOAP (Node vs Python)
+<img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/769755f3-6632-418f-9fd8-e7070f7d7748" />
 
-## Gráfico Final Comparativo de Desempenho
-<img width="1400" height="700" alt="Image" src="https://github.com/user-attachments/assets/e6c4f1d6-3b26-4c4d-be27-bd06204f9b45" />
+O SOAP baseia-se em XML, conhecido por ser verboso e custoso para processamento. Surpreendentemente, o Node.js manteve um desempenho excelente. Já o Python entrou em colapso total: a latência no cenário Leve já passou dos 2000ms e no Médio ultrapassou inacreditáveis 6000ms. O custo de validação rigorosa de schemas e a montagem dinâmica de pacotes XML no Python destruíram o desempenho sob concorrência.
+
+### 4. gRPC (Node vs Python)
+<img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/01f6deaf-c6f3-486b-a9db-541617ab1e26" />
+
+Aqui o cenário muda completamente! O gRPC, operando sobre HTTP/2 e trafegando buffers binários (Protobuf), eliminou o gargalo de processamento de texto. Ambos os servidores atingiram latências irreais de **2ms a 6ms**, tanto no cenário Leve quanto no Médio. Sem o peso do parse de JSON ou XML, o Python conseguiu empatar em velocidade e eficiência com o Node.js.
+
+---
+
+## Conclusões Gerais (Baseado nos Novos Resultados)
+
+A partir da coleta de dados detalhada e separada por protocolo, observou-se as seguintes tendências definitivas:
+
+1. **A Supremacia Absoluta do gRPC:** O gRPC foi o grande vencedor e o único ambiente onde as duas linguagens brilharam juntas. A utilização do HTTP/2 combinado com Protobufs elimina completamente a latência de rede e de serialização. Para microsserviços de altíssima performance, o gRPC iguala a capacidade das linguagens.
+
+2. **Node.js Esmaga em Protocolos Baseados em Texto:** Nos cenários trafegando texto (REST/JSON, GraphQL/JSON e SOAP/XML), o Node.js mostrou uma vantagem esmagadora sobre o Python. A arquitetura orientada a eventos e o poder do motor V8 provaram ser extremamente resilientes na manipulação e envio de strings e objetos sob milhares de requisições simultâneas.
+
+3. **O Colapso do Python sob Carga Média:** Em requisições massivas (cenário Médio), o Python não conseguiu lidar bem com I/O intensivo envolvendo serialização de dados de texto. O pior cenário se deu no SOAP, onde a complexidade das bibliotecas de XML engasgou completamente o servidor (mais de 6 segundos de latência). O Python foi eficiente apenas no gRPC.
+
+4. **O Custo Computacional do GraphQL:** Como esperado teoricamente, montar consultas sob demanda no GraphQL afeta a latência em ambas as linguagens. No Node.js a degradação foi leve em comparação ao REST, enquanto no Python o impacto tornou a API visivelmente mais lenta (1400ms).
