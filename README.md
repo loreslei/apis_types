@@ -68,6 +68,9 @@ O SOAP baseia-se em XML, conhecido por ser verboso e custoso para processamento.
 
 Aqui o cenário muda completamente! O gRPC, operando sobre HTTP/2 e trafegando buffers binários (Protobuf), eliminou o gargalo de processamento de texto. Ambos os servidores atingiram latências irreais de **2ms a 6ms**, tanto no cenário Leve quanto no Médio. Sem o peso do parse de JSON ou XML, o Python conseguiu empatar em velocidade e eficiência com o Node.js.
 
+### 5. Gráfico Comparativo Geral (Linguagens e Tipos de API)
+<img width="1400" height="700" alt="Image" src="https://github.com/user-attachments/assets/e6c4f1d6-3b26-4c4d-be27-bd06204f9b45" />
+
 ---
 
 ## Conclusões Gerais (Baseado nos Novos Resultados)
