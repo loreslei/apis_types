@@ -1,0 +1,142 @@
+Métodos e Payloads
+Abaixo estão os payloads para testar cada funcionalidade. Basta colar o JSON na aba Message de sua requisição.
+
+1. Usuários (Users)
+CreateUser
+Cria um novo usuário.
+
+json
+
+{
+  "name": "gRPC User",
+  "age": 28
+}
+GetUsers
+Busca todos os usuários. Não precisa de parâmetros (o corpo fica vazio).
+
+json
+
+{}
+UpdateUser
+Atualiza os dados de um usuário pelo ID.
+
+json
+
+{
+  "id": 1,
+  "name": "gRPC User Atualizado",
+  "age": 29
+}
+DeleteUser
+Apaga um usuário pelo ID.
+
+json
+
+{
+  "id": 1
+}
+2. Músicas (Songs)
+CreateSong
+Adiciona uma nova música no banco.
+
+json
+
+{
+  "name": "Bohemian Rhapsody",
+  "artist": "Queen"
+}
+GetSongs
+Busca todas as músicas do banco. Corpo vazio.
+
+json
+
+{}
+UpdateSong
+Atualiza dados da música pelo ID.
+
+json
+
+{
+  "id": 1,
+  "name": "Bohemian Rhapsody (Remastered)",
+  "artist": "Queen"
+}
+DeleteSong
+Remove uma música usando o ID.
+
+json
+
+{
+  "id": 1
+}
+3. Playlists
+CreatePlaylist
+Cria uma playlist para o usuário (nesse exemplo, userId = 1).
+
+json
+
+{
+  "name": "Minha Playlist gRPC",
+  "user_id": 1
+}
+UpdatePlaylist
+Atualiza dados da playlist (como ela não atualiza user_id, você só passa ID e o novo nome).
+
+json
+
+{
+  "id": 1,
+  "name": "Minha Playlist gRPC Editada",
+  "user_id": 1
+}
+DeletePlaylist
+Deleta uma playlist através do ID.
+
+json
+
+{
+  "id": 1
+}
+4. Relacionamentos (Songs das Playlists)
+AddSongToPlaylist
+Adiciona uma música (song_id) existente a uma playlist (playlist_id) já existente.
+
+json
+
+{
+  "playlist_id": 1,
+  "song_id": 1
+}
+RemoveSongFromPlaylist
+Remove uma música específica de uma playlist.
+
+json
+
+{
+  "playlist_id": 1,
+  "song_id": 1
+}
+GetUserPlaylists
+Lista todas as playlists associadas a um ID de usuário.
+
+json
+
+{
+  "id": 1
+}
+GetPlaylistSongs
+Lista as músicas contidas em uma playlist através do ID da playlist.
+
+json
+
+{
+  "id": 1
+}
+GetSongPlaylists
+Mostra em quais playlists uma determinada música foi adicionada (passando o ID da música).
+
+json
+
+{
+  "id": 1
+}

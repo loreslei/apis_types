@@ -21,7 +21,7 @@ class GrpcClient:
             res = self.stub.GetUsers(music_pb2.Empty())
             total_time = int((time.time() - start_time) * 1000)
             self.env.events.request.fire(
-                request_type="grpc", name="GetUsers", response_time=total_time, response_length=0
+                request_type="grpc", name="GetUsers", response_time=total_time, response_length=res.ByteSize()
             )
             return res
         except Exception as e:
@@ -36,7 +36,7 @@ class GrpcClient:
             res = self.stub.GetUserPlaylists(music_pb2.IdRequest(id=1))
             total_time = int((time.time() - start_time) * 1000)
             self.env.events.request.fire(
-                request_type="grpc", name="GetUserPlaylists", response_time=total_time, response_length=0
+                request_type="grpc", name="GetUserPlaylists", response_time=total_time, response_length=res.ByteSize()
             )
             return res
         except Exception as e:
