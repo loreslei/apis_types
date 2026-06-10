@@ -2,6 +2,9 @@
 
 Este projeto contém 8 implementações de APIs baseadas no modelo de streaming de músicas (REST, GraphQL, gRPC, SOAP - em Node.js e Python) além dos testes de carga com Locust para realizar o comparativo de performance.
 
+<br>
+
+`Obs: Como foi conversado em sala com o professor, ajustamos os testes do gRPC para devolver corretamente a métrica de Total Average Content Size do locust, visto que anteriomente no arquivo de teste do locust isso estava sendo desconsiderado para evitar processamento extra. Apesar dessa alteração, os tempos do percentil 95 não sofreram mudanças significativas.`
 
 ## Equipe
 
